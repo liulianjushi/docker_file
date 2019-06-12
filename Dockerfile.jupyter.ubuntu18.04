@@ -1,9 +1,9 @@
-FROM  nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
+FROM  nvidia/cuda:10.0-runtime-ubuntu18.04
 MAINTAINER liulianjushi@126.com
 WORKDIR /root/
 ENV LANG C.UTF-8
 RUN apt-get update;\
-    apt-get install -y --no-install-recommends wget python3 nodejs npm; \
+    apt-get install -y --no-install-recommends wget python3 python3-distutils nodejs npm; \
     npm install n -g ;\
     n stable ; \
     wget https://bootstrap.pypa.io/get-pip.py; \
