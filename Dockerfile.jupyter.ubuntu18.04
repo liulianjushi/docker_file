@@ -8,7 +8,8 @@ RUN apt-get update;\
     n stable ; \
     wget https://bootstrap.pypa.io/get-pip.py; \
     python3 get-pip.py; \
-    pip3 --no-cache-dir install --upgrade pip jupyterlab -i https://pypi.tuna.tsinghua.edu.cn/simple ;\
+    pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple;\
+    pip3 --no-cache-dir install jupyterlab;\
     jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github ;\
     jupyter lab --generate-config ; \
     echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'" >> /root/.jupyter/jupyter_notebook_config.py; \
