@@ -12,7 +12,7 @@ RUN apt-get update;\
     pip3 --no-cache-dir install jupyterlab tensorflow-gpu opencv-python keras;\
     jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github jupyterlab_tensorboard ;\
     jupyter lab --generate-config ; \
-    echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'" >> /root/.jupyter/jupyter_notebook_config.py; \
+    echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'\nc.NotebookApp.terminado_settings = { 'shell_command': ['/bin/bash', '--foo'] }" >> /root/.jupyter/jupyter_notebook_config.py; \
     rm get-pip.py; \
     apt-get autoremove && apt-get autoclean ;\
     rm -rf /var/lib/apt/lists/*
