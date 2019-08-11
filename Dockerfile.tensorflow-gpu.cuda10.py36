@@ -1,4 +1,4 @@
-FROM  nvidia/cuda:10.0-runtime-ubuntu18.04
+FROM  nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
 MAINTAINER liulianjushi@126.com
 WORKDIR /root/
 ENV LANG C.UTF-8
