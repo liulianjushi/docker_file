@@ -1,0 +1,20 @@
+FROM  zhaoliu09/9.0-cudnn7-runtime-ubuntu16.04-py3.6
+MAINTAINER liulianjushi@126.com
+WORKDIR /root/
+ENV LANG C.UTF-8
+RUN apt-get update;\
+    apt-get install -y --no-install-recommends wget python3 nodejs npm libglib2.0-0 libsm6 libxrender1 libxtst6 libgomp1; \
+    npm install n -g ;\
+    n stable ; \
+    wget https://bootstrap.pypa.io/get-pip.py; \
+    python3 get-pip.py; \
+    pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple;\
+     pip3 --no-cache-dir install tornado;\
+    pip3 --no-cache-dir install jupyterlab jupyter-tensorboard tensorflow-gpu opencv-python keras;\
+    jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github jupyterlab_tensorboard ;\
+    jupyter lab --generate-config ; \
+    echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'\nc.NotebookApp.terminado_settings = {'shell_command' : ['/bin/bash']}" >> /root/.jupyter/jupyter_notebook_config.py; \
+    rm get-pip.py; \
+    apt-get autoremove && apt-get autoclean ;\
+    rm -rf /var/lib/apt/lists/*
+CMD jupyter lab --ip="0.0.0.0" --allow-root
