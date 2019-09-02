@@ -1,17 +1,28 @@
-FROM  zhaoliu09/9.0-cudnn7-runtime-ubuntu16.04-py3.6
+FROM  nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
 MAINTAINER liulianjushi@126.com
-WORKDIR /root/
 ENV LANG C.UTF-8
-RUN apt-get update;\
-    apt-get install -y --no-install-recommends wget nodejs npm libglib2.0-0 libsm6 libxrender1 libxtst6 libgomp1; \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential checkinstall wget nodejs npm libglib2.0-0 libsm6 libxrender1 libxtst6 libgomp1 \
+    libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev ;\
+    wget https://www.python.org/ftp/python/3.6.7/Python-3.6.7.tgz; \
+    tar -xvf Python-3.6.7.tgz; \
+    cd Python-3.6.7; \
+    ./configure ; \
+    make ;\
+    make install ;\
+    cd ../ ;\
+    python3 -V ;\
+    wget https://bootstrap.pypa.io/get-pip.py; \
+    python3 get-pip.py;\
     npm install n -g ;\
     n stable ; \
     pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple;\
     pip3 --no-cache-dir install jupyterlab  tensorflow-gpu==1.12.0 opencv-python keras;\
     pip3 --no-cache-dir install jupyter-tensorboard;\
-    jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github jupyterlab_tensorboard ;\
+    jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github ;\
     jupyter lab --generate-config ; \
     echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'\nc.NotebookApp.terminado_settings = {'shell_command' : ['/bin/bash']}" >> /root/.jupyter/jupyter_notebook_config.py; \
     apt-get autoremove && apt-get autoclean ;\
+    rm -rf Python-3.6.7 ; \
+    rm Python-3.6.7.tgz ; \
+    rm get-pip.py ;\
     rm -rf /var/lib/apt/lists/*
-CMD jupyter lab --ip="0.0.0.0" --allow-root
