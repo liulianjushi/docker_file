@@ -1,6 +1,7 @@
-FROM  nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
+FROM  nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
 MAINTAINER liulianjushi@126.com
 ENV LANG C.UTF-8
+ENV TZ Asia/Shanghai
 WORKDIR /root/
 RUN apt-get update;\
     apt-get install -y --no-install-recommends wget python3 python3-distutils nodejs npm libglib2.0-0 libsm6 libxrender1 libxtst6 libgomp1; \
@@ -9,7 +10,7 @@ RUN apt-get update;\
     wget https://bootstrap.pypa.io/get-pip.py; \
     python3 get-pip.py; \
     pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple;\
-    pip3 --no-cache-dir install jupyterlab tensorflow-gpu opencv-python keras;\  
+    pip3 --no-cache-dir install tornado jupyterlab tensorflow opencv-python keras;\  
     pip3 --no-cache-dir install jupyter-tensorboard;\
     jupyter labextension install @mflevine/jupyterlab_html  @jupyterlab/github jupyterlab_tensorboard ;\
     jupyter lab --generate-config ; \
