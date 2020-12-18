@@ -86,16 +86,14 @@ RUN chmod a+rwx /etc/bash.bashrc
 
 WORKDIR /root/
 RUN apt-get update;\
-    apt-get install -y --no-install-recommends wget libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev nodejs npm; \
-    wget https://bootstrap.pypa.io/get-pip.py; \
-    pip3 --no-cache-dir --timeout 3000 install jupyterlab opencv-python;\  
+    apt-get install -y --no-install-recommends libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev nodejs npm; \
+    ppython3 -m pip install --no-cache-dir --timeout 3000 jupyterlab opencv-python;\  
     npm install n -g ;\
     n stable ; \
     jupyter labextension install @telamonian/theme-darcula;\
     jupyter lab --generate-config ; \
     echo "c.NotebookApp.allow_root = True\nc.NotebookApp.ip = '0.0.0.0'\nc.NotebookApp.open_browser = False\nc.NotebookApp.password = u'sha1:84517c5a4458:388c4168ca76582b91759c84fdf66d679decc2c0'\nc.NotebookApp.terminado_settings = {'shell_command' : ['/bin/bash']}\nc.NotebookApp.notebook_dir = u'/root/workspace/'" >> /root/.jupyter/jupyter_notebook_config.py; \
     mkdir /root/workspace/; \
-    rm get-pip.py; \
     apt-get autoremove && apt-get autoclean ;\
     rm -rf /var/lib/apt/lists/*
 RUN python3 -m ipykernel.kernelspec
