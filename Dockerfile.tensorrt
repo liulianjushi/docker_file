@@ -1,0 +1,17 @@
+FROM  nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+MAINTAINER liulianjushi@126.com
+ENV LANG C.UTF-8
+ENV TZ Asia/Shanghai
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:/opt/TensorRT-6.0.1.5/lib
+ADD ./TensorRT-6.0.1.5 /opt/TensorRT-6.0.1.5
+RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC; \
+    apt-get update && apt-get install -y --no-install-recommends tzdata python3 python3-distutils python3-pip; \
+    python3 -m pip --no-cache-dir --timeout 3000 install --upgrade pip setuptools ;\
+    pip3 config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple; \
+    pip3 install /opt/TensorRT-6.0.1.5/python/tensorrt-6.0.1.5-cp36-none-linux_x86_64.whl;\
+    pip3 install /opt/TensorRT-6.0.1.5/uff/uff-0.6.5-py2.py3-none-any.whl;\
+    pip3 install /opt/TensorRT-6.0.1.5/graphsurgeon/graphsurgeon-0.4.1-py2.py3-none-any.whl;\
+    apt-get autoremove && apt-get autoclean; \
+    rm -rf /var/lib/apt/lists/*
