@@ -1,0 +1,34 @@
+FROM  nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+MAINTAINER liulianjushi@126.com
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG C.UTF-8
+ENV TZ Asia/Shanghai
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+ENV PASSWORD vscode
+WORKDIR /root/workspace
+ARG  VSCODE_VERSION=4.4.0
+COPY ./code-server-${VSCODE_VERSION}-linux-amd64.tar.gz ./
+COPY ./Python-3.9.4.tar.xz ./
+RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC; \
+    apt-get update && apt-get install -y --no-install-recommends curl wget python3 python3-distutils python3-pip git make build-essential libssl-dev libffi-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev tk-dev; \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
+    apt-get install -y --no-install-recommends  nodejs; \  
+    npm install -g yarn node-gyp; \
+    ls;\
+    # wget https://www.python.org/ftp/python/3.9.4/Python-3.9.4.tar.xz; \
+    # tar -xvJf Python-3.9.4.tar.xz; \
+    # cd Python-3.9.4/ ;\
+    # ./configure prefix=/usr/local/python3; \
+    # make && make install; \
+    # ln -s /usr/local/python3/bin/python3 /usr/bin/python; \
+    python3 -m pip --no-cache-dir --timeout 3000 install --upgrade pip setuptools ;\
+    pip3 config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple; \
+    mkdir -p /usr/local/vscode; \
+    # wget https://github.com/coder/code-server/releases/download/v${VSCODE_VERSION}/code-server-${VSCODE_VERSION}-linux-amd64.tar.gz;\
+    tar -zxvf code-server-${VSCODE_VERSION}-linux-amd64.tar.gz -C /usr/local/vscode --strip-components 1; \
+    rm code-server-${VSCODE_VERSION}-linux-amd64.tar.gz; \
+    apt-get autoremove && apt-get autoclean; \
+    rm -rf /var/lib/apt/lists/*
+CMD /usr/local/vscode/code-server --port 8080 --host 0.0.0.0
