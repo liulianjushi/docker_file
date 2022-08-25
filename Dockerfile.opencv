@@ -8,6 +8,7 @@ ARG  TRT_VERSION=8.2.1.8
 ARG  OPENCV_VERSION=4.6.0
 ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/cuda/lib64:/opt/nvidia/TensorRT-${TRT_VERSION}/lib
 RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
+    sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
     apt-get update && apt-get install -y --no-install-recommends tzdata python3 python3-distutils python3-pip cmake git;\
     apt-get install -y --no-install-recommends build-essential libavcodec-dev libavformat-dev libavutil-dev libeigen3-dev libglew-dev libgtk2.0-dev libgtk-3-dev libjpeg-dev libpostproc-dev libswscale-dev libtbb-dev libtiff5-dev libv4l-dev libxvidcore-dev libx264-dev zlib1g-dev libavresample-dev gstreamer1.0-plugins-bad pkg-config;\
     python3 -m pip --no-cache-dir --timeout 3000 install --upgrade pip setuptools;\
@@ -16,7 +17,7 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
     mkdir /opt/nvidia;\
     tar -xvf /root/opencv/TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-11.4.cudnn8.2.tar.gz -C /opt/nvidia;\
     pip3 install /opt/nvidia/TensorRT-${TRT_VERSION}/python/tensorrt-${TRT_VERSION}-cp38-none-linux_x86_64.whl;\
-    pip3 install /opt/nvidia/TensorRT-${TRT_VERSION}/uff/uff-${TRT_VERSION}-py2.py3-none-any.whl;\
+    pip3 install /opt/nvidia/TensorRT-${TRT_VERSION}/uff//uff-0.6.9-py2.py3-none-any.whl;\
     pip3 install /opt/nvidia/TensorRT-${TRT_VERSION}/graphsurgeon/graphsurgeon-0.4.5-py2.py3-none-any.whl;\
     cd /root/opencv/opencv-${OPENCV_VERSION}/;\
     mkdir build && cd build;\
@@ -39,6 +40,7 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
     -D CUDA_FAST_MATH=1 \
     -D WITH_CUBLAS=1 \
     -D OPENCV_GENERATE_PKGCONFIG=1 \
+    -D OPENCV_GENERATE_SETUPVARS=OFF \
     -D WITH_GTK_2_X=ON \
     -D WITH_GSTREAMER=ON ..;\
     make -j6;\
@@ -46,3 +48,8 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
     rm -rf /root/opencv:\
     apt-get autoremove && apt-get autoclean; \
     rm -rf /var/lib/apt/lists/*
+
+
+
+    
+
