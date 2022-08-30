@@ -1,0 +1,18 @@
+FROM golang:alpine
+MAINTAINER James <liulianjushi@126.com>
+ENV LANG C.UTF-8
+ENV TZ Asia/Shanghai
+ENV DEBIAN_FRONTEND=noninteractiv
+RUN apk update && apk add tzdata make git upx binutils ca-certificates ;\
+     go version ;\
+     go env -w GOPROXY="https://goproxy.cn,direct";\
+     git clone https://github.com/fatedier/frp.git src/frp;\
+     cd /go/src/frp ;\
+     make ;\
+     cd /go/src/frp/bin && strip -s frp* && upx -9 frp*
+FROM scratch
+MAINTAINER James <liulianjushi@126.com>
+COPY --from=alpine /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
+COPY --from=0 /go/src/frp/bin/* /app/
+ENV PATH=$PATH:/app
+ENTRYPOINT ["/app/frps"]
